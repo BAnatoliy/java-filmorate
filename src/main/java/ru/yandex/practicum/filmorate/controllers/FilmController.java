@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
+    public Film create(@Valid @RequestBody Film film) {
         checkValidation(film);
         if (films.containsValue(film)) {
             throw new ValidationException("Фильм уже существует.");
@@ -38,7 +39,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) {
+    public Film update(@Valid  @RequestBody Film film) {
         checkValidation(film);
         if (films.containsKey(film.getId())) {
             log.debug("Обновлен фильм: {}", film);

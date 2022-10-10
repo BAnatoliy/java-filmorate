@@ -14,7 +14,7 @@ public class User {
     @NotNull @NotBlank
     private final String login;
     private String name;
-    @Email
+    @Email @NotNull
     private final String email;
     private final LocalDate birthday;
 

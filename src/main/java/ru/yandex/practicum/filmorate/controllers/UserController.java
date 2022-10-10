@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@Valid @RequestBody User user) {
         checkValidation(user);
         if (users.containsValue(user)) {
             throw new ValidationException("Пользователь уже существует.");
