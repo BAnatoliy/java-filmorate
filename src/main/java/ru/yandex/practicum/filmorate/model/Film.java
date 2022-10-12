@@ -2,11 +2,13 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import validator.FilmValid;
 
 import javax.validation.constraints.*;
 import java.time.Duration;
 import java.time.LocalDate;
 
+@FilmValid
 @Data
 public class Film {
     @EqualsAndHashCode.Exclude

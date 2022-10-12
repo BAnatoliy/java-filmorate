@@ -1,12 +1,14 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import validator.UserValid;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@UserValid
 @Data
 public class User {
     @EqualsAndHashCode.Exclude
