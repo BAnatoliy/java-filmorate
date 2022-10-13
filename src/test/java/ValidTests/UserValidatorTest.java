@@ -20,7 +20,7 @@ public class UserValidatorTest {
         assertTrue(valueHasErrorMessage(user3, "Не корректный login."));
     }
 
-    @Test
+    /*@Test
     public void createUserWithWrongEmail() {
         User user = new User("Login", "Name", "qw@yandex.ru", LocalDate.of(1995, 12, 27));
         User user2 = new User("Login", "Name", "qwyandex.ru", LocalDate.of(1995, 12, 27));
@@ -29,7 +29,7 @@ public class UserValidatorTest {
         assertFalse(valueHasErrorMessage(user, "должно иметь формат адреса электронной почты"));
         assertTrue(valueHasErrorMessage(user2, "должно иметь формат адреса электронной почты"));
         assertTrue(valueHasErrorMessage(user3, "должно иметь формат адреса электронной почты"));
-    }
+    }*/
 
     @Test
     public void createUserWithFeatureBirthday() {
