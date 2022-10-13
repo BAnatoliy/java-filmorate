@@ -23,7 +23,7 @@ public class UserValidatorTest {
     @Test
     public void createUserWithWrongEmail() {
         User user = new User("Login", "Name", "qw@yandex.ru", LocalDate.of(1995, 12, 27));
-        User user2 = new User("Login", "Name", "qwyandexq.ru", LocalDate.of(1995, 12, 27));
+        User user2 = new User("Login", "Name", "qwyandex.ru", LocalDate.of(1995, 12, 27));
         User user3 = new User("Login", "Name", "qwyandex.ru@", LocalDate.of(1995, 12, 27));
 
         assertFalse(valueHasErrorMessage(user, "должно иметь формат адреса электронной почты"));
