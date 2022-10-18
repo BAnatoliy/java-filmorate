@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import validator.FilmValid;
 
 import javax.validation.constraints.*;
-import java.time.Duration;
 import java.time.LocalDate;
 
 @FilmValid
