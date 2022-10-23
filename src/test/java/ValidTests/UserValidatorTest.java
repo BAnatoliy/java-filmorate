@@ -29,9 +29,9 @@ public class UserValidatorTest {
 
         assertAll(
                 () -> {
-                    assertFalse(valueHasErrorMessage(user, "должно иметь формат адреса электронной почты"));
+                    assertTrue(Validation.buildDefaultValidatorFactory().getValidator().validate(user).isEmpty());
                     assertFalse(Validation.buildDefaultValidatorFactory().getValidator().validate(user2).isEmpty());
-                    assertTrue(valueHasErrorMessage(user3, "должно иметь формат адреса электронной почты"));
+                    assertFalse(Validation.buildDefaultValidatorFactory().getValidator().validate(user3).isEmpty());
                 }
         );
     }
