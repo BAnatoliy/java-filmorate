@@ -1,15 +1,13 @@
 package ValidTests;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import static ValidTests.ValidatorTestUtil.valueHasErrorMessage;
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.Validation;
 import java.time.LocalDate;
-import java.util.function.BooleanSupplier;
+
+import static ValidTests.ValidatorTestUtil.valueHasErrorMessage;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserValidatorTest {
     @Test

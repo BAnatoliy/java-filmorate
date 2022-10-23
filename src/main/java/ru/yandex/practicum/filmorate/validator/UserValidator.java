@@ -1,4 +1,4 @@
-package validator;
+package ru.yandex.practicum.filmorate.validator;
 
 import ru.yandex.practicum.filmorate.model.User;
 
