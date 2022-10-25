@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.controllers.FilmController;
 import ru.yandex.practicum.filmorate.controllers.UserController;
 import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.User;
 
 @RestControllerAdvice(assignableTypes = {UserController.class, FilmController.class})
 @Slf4j
