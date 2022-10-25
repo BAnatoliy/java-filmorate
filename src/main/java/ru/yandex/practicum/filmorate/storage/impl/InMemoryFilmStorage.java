@@ -63,12 +63,6 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new ValidationException("Count should be positive");
         }
         List<Film> filmList = new ArrayList<>(films.values());
-        if (count == 0) {
-            log.debug("Get {} best films", 10);
-            return filmList.stream()
-                    .sorted((f1, f2) -> f2.getIdUsersLike().size() - f1.getIdUsersLike().size())
-                    .limit(10).collect(Collectors.toList());
-        }
         log.debug("Get {} best films", count);
         return filmList.stream()
                 .sorted((f1, f2) -> f2.getIdUsersLike().size() - f1.getIdUsersLike().size())
