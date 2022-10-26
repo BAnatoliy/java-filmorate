@@ -1,12 +1,13 @@
 package ValidTests;
 
-import static ValidTests.ValidatorTestUtil.valueHasErrorMessage;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.Validation;
 import java.time.LocalDate;
+
+import static ValidTests.ValidatorTestUtil.valueHasErrorMessage;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserValidatorTest {
     @Test
@@ -20,17 +21,20 @@ public class UserValidatorTest {
         assertTrue(valueHasErrorMessage(user3, "Не корректный login."));
     }
 
-    /*@Test
+    @Test
     public void createUserWithWrongEmail() {
         User user = new User("Login", "Name", "qw@yandex.ru", LocalDate.of(1995, 12, 27));
         User user2 = new User("Login", "Name", "qwyandex.ru", LocalDate.of(1995, 12, 27));
         User user3 = new User("Login", "Name", "qwyandex.ru@", LocalDate.of(1995, 12, 27));
 
-        assertFalse(valueHasErrorMessage(user, "должно иметь формат адреса электронной почты"));
-        assertTrue(valueHasErrorMessage(user2, "должно иметь формат адреса электронной почты"));
-        assertTrue(valueHasErrorMessage(user3, "должно иметь формат адреса электронной почты"));
-    }*/
-
+        assertAll(
+                () -> {
+                    assertTrue(Validation.buildDefaultValidatorFactory().getValidator().validate(user).isEmpty());
+                    assertFalse(Validation.buildDefaultValidatorFactory().getValidator().validate(user2).isEmpty());
+                    assertFalse(Validation.buildDefaultValidatorFactory().getValidator().validate(user3).isEmpty());
+                }
+        );
+    }
     @Test
     public void createUserWithFeatureBirthday() {
         User user = new User("Login", "Name", "qw@yandex.ru", LocalDate.now().minusDays(1));
@@ -41,5 +45,4 @@ public class UserValidatorTest {
         assertFalse(valueHasErrorMessage(user2, "Дата рождения не может быть в будущем."));
         assertTrue(valueHasErrorMessage(user3, "Дата рождения не может быть в будущем."));
     }
-
 }
