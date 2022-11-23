@@ -1,3 +1,4 @@
+
 package ru.yandex.practicum.filmorate.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -5,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.UserBuilder;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
 
@@ -25,16 +27,33 @@ class UserControllerTest {
     }
 
     @Test
-    public void should_List_Of_Users_Be_Empty_When_Users_Not_Created() {
+    void should_List_Of_Users_Be_Empty_When_Users_Not_Created() {
         ArrayList<User> listOfUser = new ArrayList<>(userController.findAll());
         assertTrue(listOfUser.isEmpty());
     }
 
     @Test
-    public void should_Create_Three_Valid_Users_And_Find_All_Users(){
-        User user1 = new User("QW", "Ann", "qw@mail.ru", LocalDate.of(1995, 12, 27));
-        User user2 = new User("AS", "Billy", "as@yandex.ru", LocalDate.of(2000, 1, 15));
-        User user3 = new User( "ZX", "John", "zx@google.com", LocalDate.of(1997, 7, 25));
+    void should_Create_Three_Valid_Users_And_Find_All_Users(){
+        User user1 = UserBuilder.builder()
+                .login("QW")
+                .name("Ann")
+                .email("qw@mail.ru")
+                .birthday(LocalDate.of(1995, 12, 27))
+                .build();
+
+        User user2 = UserBuilder.builder()
+                .login("AS")
+                .name("Billy")
+                .email("as@yandex.ru")
+                .birthday(LocalDate.of(2000, 1, 15))
+                .build();
+
+        User user3 = UserBuilder.builder()
+                .login("ZX")
+                .name("John")
+                .email("zx@google.com")
+                .birthday(LocalDate.of(1997, 7, 25))
+                .build();
 
         userController.create(user1);
         userController.create(user2);
@@ -53,10 +72,27 @@ class UserControllerTest {
     }
 
     @Test
-    public void should_Set_User_Name_Like_Login_When_Name_Is_Empty_Or_Null(){
-        User user1 = new User("QW", "Ann", "qw@mail.ru", LocalDate.of(1995, 12, 27));
-        User user2 = new User("AS", "", "as@yandex.ru", LocalDate.of(2000, 1, 15));
-        User user3 = new User( "ZX", null, "zx@google.com", LocalDate.of(1997, 7, 25));
+    void should_Set_User_Name_Like_Login_When_Name_Is_Empty_Or_Null(){
+        User user1 = UserBuilder.builder()
+                .login("QW")
+                .name("Ann")
+                .email("qw@mail.ru")
+                .birthday(LocalDate.of(1995, 12, 27))
+                .build();
+
+        User user2 = UserBuilder.builder()
+                .login("AS")
+                .name("")
+                .email("as@yandex.ru")
+                .birthday(LocalDate.of(2000, 1, 15))
+                .build();
+
+        User user3 = UserBuilder.builder()
+                .login("ZX")
+                .name(null)
+                .email("zx@google.com")
+                .birthday(LocalDate.of(1997, 7, 25))
+                .build();
 
         userController.create(user1);
         userController.create(user2);
@@ -75,14 +111,31 @@ class UserControllerTest {
     }
 
     @Test
-    public void should_Create_Two_Valid_User_And_Not_Create_User_When_This_User_Already_Created(){
-        User user1 = new User("QW", "Ann", "qw@mail.ru", LocalDate.of(1995, 12, 27));
-        User user2 = new User("AS", "Billy", "as@yandex.ru", LocalDate.of(2000, 1, 15));
+    void should_Create_Two_Valid_User_And_Not_Create_User_When_This_User_Already_Created(){
+        User user1 = UserBuilder.builder()
+                .login("QW")
+                .name("Ann")
+                .email("qw@mail.ru")
+                .birthday(LocalDate.of(1995, 12, 27))
+                .build();
+
+        User user2 = UserBuilder.builder()
+                .login("AS")
+                .name("Billy")
+                .email("as@yandex.ru")
+                .birthday(LocalDate.of(2000, 1, 15))
+                .build();
 
         userController.create(user1);
         userController.create(user2);
 
-        User user3 = new User( "AS", "Billy", "as@yandex.ru", LocalDate.of(2000, 1, 15));
+        User user3 = UserBuilder.builder()
+                .login("AS")
+                .name("Billy")
+                .email("as@yandex.ru")
+                .birthday(LocalDate.of(2000, 1, 15))
+                .build();
+
         ValidationException exception = assertThrows(ValidationException.class,
                 () -> userController.create(user3)
                 );
@@ -95,14 +148,32 @@ class UserControllerTest {
     }
 
     @Test
-    public void should_Not_Update_User_When_This_User_Not_Created() {
-        User user1 = new User("QW", "Ann", "qw@mail.ru", LocalDate.of(1995, 12, 27));
-        User user2 = new User("AS", "Billy", "as@yandex.ru", LocalDate.of(2000, 1, 15));
-        User newUser = new User( "ZX", "John", "zx@google.com", LocalDate.of(1997, 7, 25));
+    void should_Not_Update_User_When_This_User_Not_Created() {
+        User user1 = UserBuilder.builder()
+                .login("QW")
+                .name("Ann")
+                .email("qw@mail.ru")
+                .birthday(LocalDate.of(1995, 12, 27))
+                .build();
+
+        User user2 = UserBuilder.builder()
+                .login("AS")
+                .name("Billy")
+                .email("as@yandex.ru")
+                .birthday(LocalDate.of(2000, 1, 15))
+                .build();
+
+        User newUser = UserBuilder.builder()
+                .id(111)
+                .login("ZX")
+                .name("John")
+                .email("zx@google.com")
+                .birthday(LocalDate.of(1997, 7, 25))
+                .build();
+
         userController.create(user1);
         userController.create(user2);
 
-        newUser.setId(111);
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                 () -> userController.update(newUser)
         );
@@ -122,14 +193,32 @@ class UserControllerTest {
     }
 
     @Test
-    public void should_Update_User_When_This_User_Created() {
-        User user1 = new User("QW", "Ann", "qw@mail.ru", LocalDate.of(1995, 12, 27));
-        User user2 = new User("AS", "Billy", "as@yandex.ru", LocalDate.of(2000, 1, 15));
-        User newUser = new User( "ZX", "John", "zx@google.com", LocalDate.of(1997, 7, 25));
+    void should_Update_User_When_This_User_Created() {
+        User user1 = UserBuilder.builder()
+                .login("QW")
+                .name("Ann")
+                .email("qw@mail.ru")
+                .birthday(LocalDate.of(1995, 12, 27))
+                .build();
+
+        User user2 = UserBuilder.builder()
+                .login("AS")
+                .name("Billy")
+                .email("as@yandex.ru")
+                .birthday(LocalDate.of(2000, 1, 15))
+                .build();
+
         userController.create(user1);
         userController.create(user2);
 
-        newUser.setId(2);
+        User newUser = UserBuilder.builder()
+                .id(2)
+                .login("ZX")
+                .name("John")
+                .email("zx@google.com")
+                .birthday(LocalDate.of(1997, 7, 25))
+                .build();
+
         userController.update(newUser);
 
         List<User> users = new ArrayList<>(userController.findAll()).stream()

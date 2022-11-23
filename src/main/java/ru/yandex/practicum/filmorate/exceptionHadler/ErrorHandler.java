@@ -6,18 +6,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.controllers.FilmController;
-import ru.yandex.practicum.filmorate.controllers.UserController;
 import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.impl.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
 
-@RestControllerAdvice(assignableTypes = {UserController.class, FilmController.class, UserService.class, FilmService.class, InMemoryFilmStorage.class, InMemoryUserStorage.class, User.class, Film.class})
+@RestControllerAdvice(basePackages = "ru.yandex.practicum.filmorate.controllers")
 @Slf4j
 public class ErrorHandler {
 
@@ -36,6 +28,18 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotValid(final MethodArgumentNotValidException e) {
         return new ErrorResponse("Error", "Incorrect object");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleEmptyResult(final org.springframework.dao.EmptyResultDataAccessException e) {
+        return new ErrorResponse("Error", "Not found parameter");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleNotFoundInDateBase(final org.springframework.dao.DataIntegrityViolationException e) {
+        return new ErrorResponse("Error", "Not found parameter");
     }
 
     @ExceptionHandler

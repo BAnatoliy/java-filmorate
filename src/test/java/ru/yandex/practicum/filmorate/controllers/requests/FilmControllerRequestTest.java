@@ -1,3 +1,4 @@
+/*
 package ru.yandex.practicum.filmorate.controllers.requests;
 
 import com.google.gson.Gson;
@@ -26,7 +27,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootApplication
-public class FilmControllerRequestTest {
+class FilmControllerRequestTest {
     private ConfigurableApplicationContext context;
     private Gson gson;
     private final HttpClient client = HttpClient.newHttpClient();
@@ -41,7 +42,7 @@ public class FilmControllerRequestTest {
     }
 
     @Test
-    public void should_List_Of_Films_Be_Empty_When_Films_Not_Created() throws IOException, InterruptedException {
+    void should_List_Of_Films_Be_Empty_When_Films_Not_Created() throws IOException, InterruptedException {
         List<Film> filmList = getListFilm();
         assertTrue(filmList.isEmpty());
     }
@@ -527,3 +528,4 @@ public class FilmControllerRequestTest {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 }
+*/

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.FilmBuilder;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.impl.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
@@ -18,26 +20,43 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
     private FilmController filmController;
+    Mpa mpa = Mpa.builder().id(1L).name("G").build();
 
     @BeforeEach
     public void setUp() {
-        filmController = new FilmController(new FilmService(new InMemoryFilmStorage(), new InMemoryUserStorage())); // delete
+        filmController = new FilmController(new FilmService(new InMemoryFilmStorage(new InMemoryUserStorage())));
     }
 
     @Test
-    public void should_List_Of_Films_Be_Empty_When_Films_Not_Created() {
+    void should_List_Of_Films_Be_Empty_When_Films_Not_Created() {
         ArrayList<Film> listOfFilm = new ArrayList<>(filmController.findAll());
         assertTrue(listOfFilm.isEmpty());
     }
 
     @Test
-    public void should_Create_Two_Valid_Film_And_Not_Create_One_Invalid_Films_When_This_Film_Already_Created() {
-        Film film = new Film("Otto", "class", LocalDate.of(2005, 10, 17),
-                100);
-        Film film2 = new Film("Tom", "comedy", LocalDate.of(2007, 12, 27),
-                110);
-        Film film3 = new Film("Tom", "comedy", LocalDate.of(2007, 12, 27),
-                110);
+    void should_Create_Two_Valid_Film_And_Not_Create_One_Invalid_Films_When_This_Film_Already_Created() {
+        Film film = FilmBuilder.builder()
+                .name("Otto")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+        Film film2 = FilmBuilder.builder()
+                .name("Tom")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+        Film film3 = FilmBuilder.builder()
+                .name("Tom")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+
         filmController.create(film);
         filmController.create(film2);
 
@@ -53,13 +72,29 @@ class FilmControllerTest {
     }
 
     @Test
-    public void should_Create_Three_Valid_Films_And_Find_All_Films() {
-        Film film = new Film("Otto", "class", LocalDate.of(2005, 10, 17),
-                100);
-        Film film2 = new Film("Tom", "comedy", LocalDate.of(2007, 12, 27),
-                110);
-        Film film3 = new Film("Titanic", "drama", LocalDate.of(1995, 7, 25),
-                127);
+    void should_Create_Three_Valid_Films_And_Find_All_Films() {
+        Film film = FilmBuilder.builder()
+                .name("Otto")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+        Film film2 = FilmBuilder.builder()
+                .name("Tom")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+        Film film3 = FilmBuilder.builder()
+                .name("Titanic")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+
         filmController.create(film);
         filmController.create(film2);
         filmController.create(film3);
@@ -77,20 +112,42 @@ class FilmControllerTest {
     }
 
     @Test
-    public void should_Update_Film_When_Created_Film_With_The_Same_Id() {
-        Film film = new Film("Otto", "class", LocalDate.of(2005, 10, 17),
-                100);
-        Film film2 = new Film("Tom", "comedy", LocalDate.of(2007, 12, 27),
-                110);
-        Film film3 = new Film("Titanic", "drama", LocalDate.of(1995, 7, 25),
-                127);
+    void should_Update_Film_When_Created_Film_With_The_Same_Id() {
+        Film film = FilmBuilder.builder()
+                .name("Otto")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+        Film film2 = FilmBuilder.builder()
+                .name("Tom")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+        Film film3 = FilmBuilder.builder()
+                .name("Titanic")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+
         filmController.create(film);
         filmController.create(film2);
         filmController.create(film3);
 
-        Film newFilm = new Film("Spider Man", "action", LocalDate.of(2008, 1, 13),
-                95);
-        newFilm.setId(3);
+        Film newFilm = FilmBuilder.builder()
+                .id(3)
+                .name("Spider Man")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+
         filmController.update(newFilm);
 
         List<Film> films = new ArrayList<>(filmController.findAll()).stream()
@@ -106,20 +163,41 @@ class FilmControllerTest {
     }
 
     @Test
-    public void should_Not_Update_Film_When_Film_With_The_Same_Id_Not_Created() {
-        Film film = new Film("Otto", "class", LocalDate.of(2005, 10, 17),
-                100);
-        Film film2 = new Film("Tom", "comedy", LocalDate.of(2007, 12, 27),
-                110);
-        Film film3 = new Film("Titanic", "drama", LocalDate.of(1995, 7, 25),
-                127);
+    void should_Not_Update_Film_When_Film_With_The_Same_Id_Not_Created() {
+        Film film = FilmBuilder.builder()
+                .name("Otto")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+        Film film2 = FilmBuilder.builder()
+                .name("Tom")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+        Film film3 = FilmBuilder.builder()
+                .name("Titanic")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
+
         filmController.create(film);
         filmController.create(film2);
         filmController.create(film3);
 
-        Film newFilm = new Film("Spider Man", "action", LocalDate.of(2008, 1, 13),
-                95);
-        newFilm.setId(111);
+        Film newFilm = FilmBuilder.builder()
+                .id(333)
+                .name("Spider Man")
+                .description("description")
+                .releaseDate(LocalDate.of(1995, 10, 12))
+                .duration(150)
+                .mpa(mpa)
+                .build();
         EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
                 () -> filmController.update(newFilm)
                 );

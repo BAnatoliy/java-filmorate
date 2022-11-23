@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 public class User {
     @EqualsAndHashCode.Exclude
-    private final Set<Long> friendsId = new HashSet<>();
+    private Set<Long> friendsId = new HashSet<>();
     @EqualsAndHashCode.Exclude
     private long id;
     @NotNull @NotBlank
@@ -24,13 +24,6 @@ public class User {
     @Email @NotNull
     private final String email;
     private final LocalDate birthday;
-
-    public User(String login, String name, String email, LocalDate birthday) {
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
-    }
 
     public void addFriend(long id) {
         friendsId.add(id);
@@ -41,9 +34,5 @@ public class User {
             throw new EntityNotFoundException("User not found!");
         }
         friendsId.remove(id);
-    }
-
-    public Set<Long> getFriendsId() {
-        return friendsId;
     }
 }
