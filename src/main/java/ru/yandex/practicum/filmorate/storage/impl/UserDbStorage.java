@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
@@ -14,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Qualifier("userDbStorage")
@@ -109,8 +107,9 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public List<User> getFriends(long userId) {
-        List<Long> friendIds = getListOfFriendIds(userId);
-        return friendIds.stream().map(this::getUserById).collect(Collectors.toList());
+        String sql = "select U.USER_ID, U.USER_LOGIN, U.USER_NAME, U.EMAIL, U.BIRTHDAY from FRIENDS as F " +
+                "left join USERS as U on F.FRIEND_ID = U.USER_ID where F.USER_ID = ?";
+        return jdbcTemplate.query(sql, this::mapRowToUser, userId);
     }
 
     @Override

@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @Qualifier("filmDbStorage")
@@ -113,10 +112,10 @@ public class FilmDbStorage implements FilmStorage {
             throw new ValidationException("Count should be positive");
         }
 
-        List<Film> filmList = getFilms();
-        List<Film> bestFilms = filmList.stream()
-                .sorted((f1, f2) -> f2.getIdUsersLike().size() - f1.getIdUsersLike().size())
-                .limit(count).collect(Collectors.toList());
+        String sql = "select F.FILM_ID, F.FILM_NAME, F.RELEASE_DATE, F.DESCRIPTION, F.DURATION, F.RATE, " +
+                "F.MPA_ID, count(L.USER_ID) as Likes from FILMS as F left join LIKES as L on F.FILM_ID = L.FILM_ID " +
+                "GROUP BY F.FILM_ID order by Likes desc LIMIT ?";
+        List<Film> bestFilms = jdbcTemplate.query(sql, this::mapRowToFilm, count);
 
         log.debug("Get {} best films", count);
         return bestFilms;
