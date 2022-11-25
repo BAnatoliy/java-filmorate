@@ -2,65 +2,51 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.impl.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.List;
 
 @Service
 @Slf4j
 public class FilmService {
-    private InMemoryFilmStorage inMemoryFilmStorage;
-    private InMemoryUserStorage inMemoryUserStorage; // delete
+    private final FilmStorage filmStorage;
 
     @Autowired
-    public FilmService(InMemoryFilmStorage inMemoryFilmStorage, InMemoryUserStorage inMemoryUserStorage) {
-        this.inMemoryFilmStorage = inMemoryFilmStorage;
-        this.inMemoryUserStorage = inMemoryUserStorage;
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage) {
+        this.filmStorage = filmStorage;
     }
 
     public Film addFilm(Film film) {
-        return inMemoryFilmStorage.addFilm(film);
+        return filmStorage.addFilm(film);
     }
 
     public void deleteFilm(long id) {
-        inMemoryFilmStorage.deleteFilm(id);
+        filmStorage.deleteFilm(id);
     }
 
     public Film updateFilm(Film film) {
-        return inMemoryFilmStorage.updateFilm(film);
+        return filmStorage.updateFilm(film);
     }
 
     public List<Film> getFilms() {
-        return inMemoryFilmStorage.getFilms();
+        return filmStorage.getFilms();
     }
 
     public List<Film> getBestFilms(int count) {
-        return inMemoryFilmStorage.getBestFilms(count);
+        return filmStorage.getBestFilms(count);
     }
     public Film getFilmById(long id) {
-        return inMemoryFilmStorage.getFilmById(id);
+        return filmStorage.getFilmById(id);
     }
 
     public void addLike(long filmId, long userId) {
-        if(inMemoryUserStorage.getUserById(userId).getClass().equals(User.class)) {
-            inMemoryFilmStorage.getFilmById(filmId).addLike(userId);
-            log.debug("User with id {} liked film with id {}", userId, filmId);
-        } else {
-            throw new EntityNotFoundException("User not found!");
-        }
+        filmStorage.addLike(filmId, userId);
     }
 
     public void deleteLike(long filmId, long userId) {
-        if(inMemoryUserStorage.getUserById(userId).getClass().equals(User.class)) {
-            inMemoryFilmStorage.getFilmById(filmId).deleteLike(userId);
-            log.debug("User with id {} remove like film with id {}", userId, filmId);
-        } else {
-            throw new EntityNotFoundException("User not found!");
-        }
+        filmStorage.deleteLike(filmId, userId);
     }
 }

@@ -2,10 +2,12 @@ package ru.yandex.practicum.filmorate.storage.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
 import java.util.ArrayList;
@@ -15,10 +17,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@Qualifier("inMemoryFilmStorage")
 public class InMemoryFilmStorage implements FilmStorage {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Map<Long, Film> films = new HashMap<>();
     private long filmId = 1;
+    private final InMemoryUserStorage inMemoryUserStorage;
+
+    public InMemoryFilmStorage(InMemoryUserStorage inMemoryUserStorage) {
+        this.inMemoryUserStorage = inMemoryUserStorage;
+    }
+
 
     @Override
     public Film addFilm(Film film) {
@@ -47,7 +56,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new EntityNotFoundException("Film not found!");
         }
         films.put(film.getId(), film);
-        log.info("Update film: " + film);
+        log.info("Update film: {}", film);
         return film;
     }
 
@@ -76,6 +85,26 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
         log.debug("Find film with id: {}", id);
         return films.get(id);
+    }
+
+    @Override
+    public void addLike(long filmId, long userId) {
+        if(inMemoryUserStorage.getUserById(userId).getClass().equals(User.class)) {
+            getFilmById(filmId).addLike(userId);
+            log.debug("User with id {} liked film with id {}", userId, filmId);
+        } else {
+            throw new EntityNotFoundException("User not found!");
+        }
+    }
+
+    @Override
+    public void deleteLike(long filmId, long userId) {
+        if(inMemoryUserStorage.getUserById(userId).getClass().equals(User.class)) {
+            getFilmById(filmId).deleteLike(userId);
+            log.debug("User with id {} remove like film with id {}", userId, filmId);
+        } else {
+            throw new EntityNotFoundException("User not found!");
+        }
     }
 
     private void generationId() {

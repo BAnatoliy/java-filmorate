@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controllers.requests;
+/*package ru.yandex.practicum.filmorate.controllers.requests;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -449,3 +449,4 @@ public class UserControllerRequestTest {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 }
+*/
