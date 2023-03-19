@@ -30,7 +30,7 @@ public class FilmDbStorage implements FilmStorage {
                 .withTableName("FILMS")
                 .usingGeneratedKeyColumns("FILM_ID");
 
-        long filmId = simpleJdbcInsert.executeAndReturnKey(film.toMap()).longValue(); // delete Set<Genre>
+        long filmId = simpleJdbcInsert.executeAndReturnKey(film.toMap()).longValue();
 
         film.getGenres().forEach(genre -> {
             String sql2 = "insert into FILMS_GENRES (FILM_ID, GENRE_ID) values (?, ?)";
@@ -53,10 +53,6 @@ public class FilmDbStorage implements FilmStorage {
         if (isDeleted) {
             throw new EntityNotFoundException("Film with not found");
         }
-
-        String sql2 = "delete from FILMS_GENRES where FILM_ID = ?";
-        jdbcTemplate.update(sql2, id);
-
         log.debug("Film with id = {} delete", id);
     }
 
@@ -150,7 +146,7 @@ public class FilmDbStorage implements FilmStorage {
                 .build();
     }
 
-    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException { // Set<Genre> genres
+    private Film mapRowToFilm(ResultSet resultSet, int rowNum) throws SQLException {
         long filmId = resultSet.getLong("FILM_ID");
         return FilmBuilder.builder()
                 .id(filmId)

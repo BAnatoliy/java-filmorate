@@ -46,9 +46,6 @@ public class UserDbStorage implements UserStorage {
             throw new EntityNotFoundException("User not found!");
         }
 
-        String sql2 = "delete from FRIENDS where USER_ID = ?";
-        jdbcTemplate.update(sql2, id);
-
         log.debug("User with id: {} deleted", id);
     }
 
